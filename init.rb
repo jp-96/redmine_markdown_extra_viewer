@@ -1,24 +1,12 @@
 require 'redmine'
-require 'redcarpet'
 
 RepositoriesController.class_eval do
   alias markdown_extra_viewer_orig_entry entry
   def entry
     markdown_extra_viewer_orig_entry
     if not performed? and @path =~ /\.(md|markdown)\z/
-      markdown = Redcarpet::Markdown.new(
-        Redmine::WikiFormatting::Markdown::HTML.new(
-          :filter_html => true,
-          :hard_wrap => true
-        ),
-        :autolink => true,
-        :fenced_code_blocks => true,
-        :space_after_headers => true,
-        :tables => true,
-        :strikethrough => true,
-        :superscript => true,
-        :no_intra_emphasis => true
-      )
+      formatter_name = Redmine::WikiFormatting.format_names.find {|name| name =~ /Markdown/i}
+      formatter = Redmine::WikiFormatting.formatter_for(formatter_name).new(text)
       @content = markdown.render(@content)
       render :template => "repositories/entry_markdown"
     end
