@@ -6,7 +6,7 @@ RepositoriesController.class_eval do
     markdown_extra_viewer_orig_entry
     if not performed? and @path =~ /\.(md|markdown)\z/
       formatter_name = Redmine::WikiFormatting.format_names.find {|name| name =~ /Markdown/i}
-      @content = Redmine::WikiFormatting.formatter_for(formatter_name).new(@content.html_safe)
+      @content = Redmine::WikiFormatting.formatter_for(formatter_name).new('テスト出力')
       render :template => "repositories/entry_markdown"
     end
   end
